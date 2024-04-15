@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/go-co-op/gocron/v2"
+	"log"
+	"os/exec"
+	"strconv"
 	"time"
 )
 
@@ -12,10 +15,15 @@ func main() {
 	}
 
 	job, err := scheduler.NewJob(
-		gocron.DurationJob(10*time.Second),
+		gocron.DurationJob(2*time.Second),
 		gocron.NewTask(
 			func(a string, b int) {
-				println(a, b)
+				command := exec.Command("bash", "-c", "echo "+a+" 和 "+strconv.Itoa(b))
+				output, err := command.CombinedOutput()
+				if err != nil {
+					log.Printf("Failed to execute script: %s, error: %s", "bash -c echo "+a+" 和 "+strconv.Itoa(b), err)
+				}
+				log.Printf("Output: %s\n", output)
 			},
 			"hello",
 			123),
@@ -30,7 +38,7 @@ func main() {
 	scheduler.Start()
 
 	select {
-	case <-time.After(time.Minute):
+	case <-time.After(10 * time.Second):
 	}
 
 	err = scheduler.Shutdown()
