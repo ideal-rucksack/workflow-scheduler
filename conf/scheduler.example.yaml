@@ -1,0 +1,12 @@
+datasource:
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    user: root
+    password: root
+    database: scheduler
+    query: parseTime=true&charset=utf8mb4&loc=Australia%2FSydney
+logger:
+  level: info
+  colors: true
+  time_format: '2006-01-02 15:04:05'
