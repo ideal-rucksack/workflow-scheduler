@@ -6,6 +6,8 @@ datasource:
     password: root
     database: scheduler
     query: parseTime=true&charset=utf8mb4&loc=Australia%2FSydney
+server:
+  port: 5266
 logger:
   level: info
   colors: true

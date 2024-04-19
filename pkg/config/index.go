@@ -5,6 +5,7 @@ import "github.com/ideal-rucksack/workflow-scheduler/pkg/logging"
 type SchedulerProperties struct {
 	Datasource *DatasourceConfig `yaml:"datasource"`
 	Logger     *logging.Config   `yaml:"logger"`
+	Server     *ServerProperties `yaml:"server"`
 }
 
 type ConsoleProperties struct {
@@ -35,4 +36,8 @@ type MySQLConfig struct {
 	ConnMaxLifetime int `mapstructure:"conn_max_lifetime" yaml:"conn_max_lifetime"`
 	// Query is query parameters for connecting to the database
 	Query string `mapstructure:"query" yaml:"query"`
+}
+
+type ServerProperties struct {
+	Port int `mapstructure:"conn_max_lifetime" yaml:"port"`
 }

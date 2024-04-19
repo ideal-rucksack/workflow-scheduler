@@ -5,12 +5,17 @@ import (
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/logging"
 )
 
-func (p SchedulerProperties) makeSchedulerDefault() {
-	makeLoggerDefault(p.Logger)
-	makeDatasourceDefault(p.Datasource)
+func (p SchedulerProperties) makeSchedulerDefault() SchedulerProperties {
+	loggerDefault := makeLoggerDefault(p.Logger)
+	p.Logger = loggerDefault
+	datasourceDefault := makeDatasourceDefault(p.Datasource)
+	p.Datasource = datasourceDefault
+	serverDefault := makeServerDefault(p.Server)
+	p.Server = serverDefault
+	return p
 }
 
-func makeLoggerDefault(cfg *logging.Config) {
+func makeLoggerDefault(cfg *logging.Config) *logging.Config {
 	level := scheduler.LoggerLevel
 	encoding := scheduler.LoggerEncoding
 	colors := scheduler.LoggerColors
@@ -22,7 +27,7 @@ func makeLoggerDefault(cfg *logging.Config) {
 			Colors:     &colors,
 			TimeFormat: timeFormat,
 		}
-		return
+		return cfg
 	}
 
 	if cfg.Encoding == "" {
@@ -40,14 +45,17 @@ func makeLoggerDefault(cfg *logging.Config) {
 	if cfg.TimeFormat == "" {
 		cfg.TimeFormat = timeFormat
 	}
+	return cfg
 }
 
-func makeDatasourceDefault(cfg *DatasourceConfig) {
+func makeDatasourceDefault(cfg *DatasourceConfig) *DatasourceConfig {
 	// MySQL
-	makeMySQLDefault(cfg.MySQL)
+	mySQLConfig := makeMySQLDefault(cfg.MySQL)
+	cfg.MySQL = mySQLConfig
+	return cfg
 }
 
-func makeMySQLDefault(cfg *MySQLConfig) {
+func makeMySQLDefault(cfg *MySQLConfig) *MySQLConfig {
 	host := scheduler.MySQLHost
 	port := scheduler.MySQLPort
 	user := scheduler.MySQLUser
@@ -106,4 +114,19 @@ func makeMySQLDefault(cfg *MySQLConfig) {
 	if cfg.Query == "" {
 		cfg.Query = query
 	}
+	return cfg
+}
+
+func makeServerDefault(cfg *ServerProperties) *ServerProperties {
+	var port = scheduler.ServerPort
+	if cfg == nil {
+		cfg = &ServerProperties{
+			Port: port,
+		}
+	}
+
+	if cfg.Port == 0 {
+		cfg.Port = port
+	}
+	return cfg
 }

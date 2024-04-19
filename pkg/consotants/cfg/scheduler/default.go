@@ -18,4 +18,6 @@ const (
 	// MYSQLMaxLifetime 使分配的连接在关闭之前可以重用的最长时间 默认5分钟
 	MYSQLMaxLifetime = 5
 	MySQLQuery       = "parseTime=true&charset=utf8mb4"
+
+	ServerPort = 5266
 )

@@ -1,14 +1,15 @@
 package cmd
 
 import (
+	"github.com/go-co-op/gocron/v2"
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/config"
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/logging"
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/setup/datasource"
-	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/repo"
-	"github.com/jmoiron/sqlx"
 )
 
-var WorkflowRepository *repo.WorkflowRepo
+var (
+	Scheduler gocron.Scheduler
+)
 
 func Start(cfg config.SchedulerProperties) {
 	// 初始化日志
@@ -25,14 +26,11 @@ func Start(cfg config.SchedulerProperties) {
 	createRepositories(db)
 
 	// 初始化定时任务
-	SetupScheduler(WorkflowRepository)
-
-	// 启动定时任务
+	Scheduler = SetupScheduler(WorkflowRepository)
 
 	// 启动http服务
-	select {}
-}
-
-func createRepositories(db *sqlx.DB) {
-	WorkflowRepository = repo.NewWorkflowRepo(db)
+	err = setupRestful(*cfg.Server)
+	if err != nil {
+		logging.Logger.Fatal(err.Error())
+	}
 }

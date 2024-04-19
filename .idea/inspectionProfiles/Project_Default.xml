@@ -6,6 +6,9 @@
         <function importPath="github.com/go-co-op/gocron/v2" name="NewScheduler" />
         <function importPath="github.com/ideal-rucksack/workflow-scheduler/pkg/config" name="LoadConfig" />
       </functions>
+      <methods>
+        <method importPath="github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/service" receiver="JobService" name="QueryById" />
+      </methods>
     </inspection_tool>
   </profile>
 </component>

@@ -31,7 +31,7 @@ func LoadConfig(models ...string) (*SchedulerProperties, *ConsoleProperties, err
 				return nil, nil, fmt.Errorf("failed to bind unmarshal %s properties: %s", models[i], err.Error())
 			}
 			// 未没有设置配置的数据配置默认值
-			schedulerProperties.makeSchedulerDefault()
+			schedulerProperties = schedulerProperties.makeSchedulerDefault()
 		} else {
 			if err := viper.Unmarshal(&consoleProperties); err != nil {
 				return nil, nil, fmt.Errorf("failed to bind unmarshal %s properties: %s", models[i], err.Error())
