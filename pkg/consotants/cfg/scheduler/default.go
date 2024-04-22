@@ -20,4 +20,6 @@ const (
 	MySQLQuery       = "parseTime=true&charset=utf8mb4"
 
 	ServerPort = 5266
+
+	PluginHome = "/etc/workflow_scheduler/plugins"
 )

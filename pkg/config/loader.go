@@ -2,7 +2,9 @@ package config
 
 import (
 	"fmt"
+	"github.com/ideal-rucksack/workflow-scheduler/pkg/consotants/cfg"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // LoadConfig loads the configuration for the given model
@@ -31,13 +33,22 @@ func LoadConfig(models ...string) (*SchedulerProperties, *ConsoleProperties, err
 				return nil, nil, fmt.Errorf("failed to bind unmarshal %s properties: %s", models[i], err.Error())
 			}
 			// 未没有设置配置的数据配置默认值
-			schedulerProperties = schedulerProperties.makeSchedulerDefault()
+			schedulerProperties.make()
 		} else {
 			if err := viper.Unmarshal(&consoleProperties); err != nil {
 				return nil, nil, fmt.Errorf("failed to bind unmarshal %s properties: %s", models[i], err.Error())
 			}
 		}
 	}
+	err := exportOsConfig(schedulerProperties, consoleProperties)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	return &schedulerProperties, &consoleProperties, nil
+}
+
+func exportOsConfig(schedule SchedulerProperties, console ConsoleProperties) error {
+	err := os.Setenv(cfg.PluginHome, schedule.Plugin.Home)
+	return err
 }

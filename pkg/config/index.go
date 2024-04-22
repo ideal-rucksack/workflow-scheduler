@@ -2,18 +2,24 @@ package config
 
 import "github.com/ideal-rucksack/workflow-scheduler/pkg/logging"
 
-type SchedulerProperties struct {
-	Datasource *DatasourceConfig `yaml:"datasource"`
-	Logger     *logging.Config   `yaml:"logger"`
-	Server     *ServerProperties `yaml:"server"`
+type MakeDefault interface {
+	make()
+	makeLogger()
+	makeDatasource()
+	makeServer()
+	makePlugin()
+}
+
+type MakeDatasourceDefault interface {
+	makeMySQL()
 }
 
 type ConsoleProperties struct {
-	Datasource DatasourceConfig `yaml:"datasource"`
-	Logger     logging.Config   `yaml:"logger"`
+	Datasource DatasourceProperties `yaml:"datasource"`
+	Logger     logging.Config       `yaml:"logger"`
 }
 
-type DatasourceConfig struct {
+type DatasourceProperties struct {
 	MySQL *MySQLConfig `yaml:"mysql"`
 }
 
@@ -40,4 +46,8 @@ type MySQLConfig struct {
 
 type ServerProperties struct {
 	Port int `mapstructure:"conn_max_lifetime" yaml:"port"`
+}
+
+type PluginProperties struct {
+	Home string `mapstructure:"home" yaml:"home"`
 }

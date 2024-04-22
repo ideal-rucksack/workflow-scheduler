@@ -27,6 +27,12 @@ func Start(cfg config.SchedulerProperties) {
 
 	// 初始化定时任务
 	Scheduler = SetupScheduler(WorkflowRepository)
+	defer func(scheduler gocron.Scheduler) {
+		err := scheduler.Shutdown()
+		if err != nil {
+			logging.Logger.Error(err.Error())
+		}
+	}(Scheduler)
 
 	// 启动http服务
 	err = setupRestful(*cfg.Server)

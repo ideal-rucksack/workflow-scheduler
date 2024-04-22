@@ -1,9 +1,12 @@
 package code_generation
 
 import (
+	"github.com/ideal-rucksack/workflow-scheduler/pkg/consotants/cfg"
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/logging"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/job"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/repo/entities"
+	"os"
+	"os/exec"
 )
 
 func init() {
@@ -27,5 +30,8 @@ func (c CodeGenerationClient) Execute() error {
 	if jobInfo != nil {
 		logging.Logger.Infof("code generation jobInfo %s is running", *jobInfo.Name)
 	}
-	return nil
+
+	pluginPath := os.Getenv(cfg.PluginHome) + "/mysql/mysql_go_100"
+	err := exec.Command(pluginPath, "-webhook", "http://localhost:5266/webhooks", "-action", "databases").Run()
+	return err
 }

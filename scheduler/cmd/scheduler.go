@@ -14,12 +14,6 @@ func SetupScheduler(workflowRepo *repo.WorkflowRepo) gocron.Scheduler {
 		logging.Logger.Fatal(err.Error())
 	}
 	initScheduler(workflowRepo, scheduler)
-	defer func(scheduler gocron.Scheduler) {
-		err := scheduler.Shutdown()
-		if err != nil {
-			logging.Logger.Error(err.Error())
-		}
-	}(scheduler)
 	scheduler.Start()
 	return scheduler
 }
