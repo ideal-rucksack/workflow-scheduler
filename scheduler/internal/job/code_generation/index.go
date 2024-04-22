@@ -31,7 +31,7 @@ func (c CodeGenerationClient) Execute() error {
 		logging.Logger.Infof("code generation jobInfo %s is running", *jobInfo.Name)
 	}
 
-	pluginPath := os.Getenv(cfg.PluginHome) + "/mysql/mysql_go_100"
+	pluginPath := os.Getenv(cfg.PluginHome) + "/mysql/mysql"
 	err := exec.Command(pluginPath, "-webhook", "http://localhost:5266/webhooks", "-action", "databases").Run()
 	return err
 }
