@@ -43,8 +43,9 @@ func (c CodeGenerationClient) Execute() error {
 	}
 
 	logging.Logger.Infof("plugin %s loaded", instance.Name())
-	instance.Executor("-webhook", "http://localhost:5266/webhooks", "-action", "databases")
-	//pluginPath := os.Getenv(cfg.PluginHome) + "/mysql/mysql"
-	//err := exec.Command(pluginPath, "-webhook", "http://localhost:5266/webhooks", "-action", "databases").Run()
+	err = instance.Executor("-webhook", "http://localhost:5266/webhooks", "-action", "databases")
+	if err != nil {
+		return err
+	}
 	return nil
 }

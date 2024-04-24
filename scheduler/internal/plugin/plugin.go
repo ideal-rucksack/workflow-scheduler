@@ -13,18 +13,29 @@ type Plugin interface {
 
 // Config 插件配置用于解析plugin.json
 type Config struct {
-	Name        string            `json:"name"`
-	Language    string            `json:"language"`
-	Suffix      string            `json:"suffix"`
-	Version     string            `json:"version"`
-	Description string            `json:"description"`
-	Logfile     string            `json:"logfile"`
-	Parameters  []ConfigParameter `json:"parameters"`
+	Name        string    `json:"name"`
+	Language    string    `json:"language"`
+	Suffix      string    `json:"suffix"`
+	Version     string    `json:"version"`
+	Description string    `json:"description"`
+	Logfile     string    `json:"logfile"`
+	Parameter   Parameter `json:"parameter"`
 }
 
-type ConfigParameter struct {
-	Name        string `json:"name"`
+type Webhook struct {
 	Type        string `json:"type"`
 	Description string `json:"description"`
 	Required    bool   `json:"required"`
+	Default     string `json:"default"`
 }
+
+type Parameter struct {
+	Webhook Webhook `json:"webhook"`
+}
+
+/*
+Name        string `json:"name"`
+	Type        string `json:"type"`
+	Description string `json:"description"`
+	Required    bool   `json:"required"`
+*/

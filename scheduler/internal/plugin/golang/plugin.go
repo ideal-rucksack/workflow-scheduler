@@ -16,7 +16,7 @@ type Plugin struct {
 func (p *Plugin) Executor(args ...string) error {
 	config := p.GetConfig()
 	pluginPath := filepath.Join(os.Getenv(cfg.PluginHome), p.PluginName, config.Name)
-	err := exec.Command(pluginPath, "-webhook", "http://localhost:5266/webhooks", "-action", "databases").Run()
+	err := exec.Command(pluginPath, args...).Run()
 	return err
 }
 
