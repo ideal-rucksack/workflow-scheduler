@@ -22,6 +22,7 @@ create table if not exists job (
     description text comment '任务描述',
     type varchar(128) comment '任务类型',
     depend_job_id bigint comment '依赖任务id',
+    plugin text comment '任务插件如: mysql_go_100',
     workflow_id bigint comment '工作流id',
     status varchar(32) not null comment '任务状态',
     script text comment '任务脚本',

@@ -23,6 +23,7 @@ func (r JobRepo) Columns() []string {
 		"description",
 		"type",
 		"depend_job_id",
+		"plugin",
 		"workflow_id",
 		"status",
 		"script",
