@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/config"
+	"github.com/ideal-rucksack/workflow-scheduler/pkg/middleware"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/api"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/service"
 	"strconv"
@@ -11,6 +12,7 @@ import (
 var (
 	jobAPI      *api.JobAPI
 	workflowAPI *api.WorkflowAPI
+	accountAPI  *api.AccountAPI
 )
 
 func setupGin() *gin.Engine {
@@ -19,11 +21,16 @@ func setupGin() *gin.Engine {
 }
 
 func setupAPI(engine *gin.Engine) {
-	jobAPI = api.NewJobAPI(service.NewJobService(JobRepository))
+	engine.Use(middleware.ErrorMiddleware())
+
+	jobAPI := api.NewJobAPI(service.NewJobService(JobRepository))
 	jobAPI.Register(engine)
 
-	workflowAPI = api.NewWorkflowAPI(service.NewWorkflowService(WorkflowRepository))
+	workflowAPI := api.NewWorkflowAPI(service.NewWorkflowService(WorkflowRepository))
 	workflowAPI.Register(engine)
+
+	accountAPI := api.NewAccountAPI(service.NewAccountService(AccountRepository))
+	accountAPI.Register(engine)
 }
 
 func setupRestful(cfg config.ServerProperties) error {

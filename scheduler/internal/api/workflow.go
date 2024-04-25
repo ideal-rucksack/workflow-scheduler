@@ -11,7 +11,7 @@ type WorkflowAPI struct {
 	service *service.WorkflowService
 }
 
-func (a WorkflowAPI) Register(engine *gin.Engine) {
+func (a WorkflowAPI) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
 	engine.POST("/webhooks", a.webhooks)
 }
 

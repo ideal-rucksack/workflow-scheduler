@@ -2,7 +2,8 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/build/sql/init.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/scheduler/internal/repo/account.go" dialect="MongoDB" />
     <file url="file://$PROJECT_DIR$/scheduler/internal/repo/workflow.go" dialect="GenericSQL" />
-    <file url="PROJECT" dialect="MongoDB" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

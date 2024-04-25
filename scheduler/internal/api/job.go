@@ -13,8 +13,9 @@ type JobAPI struct {
 	service *service.JobService
 }
 
-func (a JobAPI) Register(engine *gin.Engine) {
-	engine.POST("/job/run", a.runJob)
+func (a JobAPI) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc) {
+	routes := engine.Group("/job", middlewares...)
+	routes.POST("/run", a.runJob)
 }
 
 func NewJobAPI(service *service.JobService) *JobAPI {
