@@ -16,4 +16,30 @@ export default {
       login: '登录',
     }
   },
+  page: {
+    login: {
+      username: {
+        label: 'Username',
+        placeholder: 'Please enter username',
+      },
+      password: {
+        label: 'Password',
+        placeholder: 'Please enter password',
+      },
+      title: 'Welcome Back',
+    }
+  },
+  button: {
+    signIn: 'Sign In',
+    create: 'Create',
+    cancel: 'Cancel',
+    save: 'Save',
+    edit: 'Edit',
+    delete: 'Delete',
+    submit: 'Submity',
+  },
+  request: {
+    400: 'Bad Request',
+    500: 'Internal Server Error',
+  },
 };

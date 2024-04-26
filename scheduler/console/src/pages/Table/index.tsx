@@ -1,4 +1,4 @@
-import services from '@/services/demo';
+import services from '@/services';
 import {
   ActionType,
   FooterToolbar,
@@ -11,6 +11,7 @@ import { Button, Divider, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
+import {FormattedMessage} from "@@/plugin-locale";
 
 const { addUser, queryUserList, deleteUser, modifyUser } =
   services.UserController;
@@ -19,7 +20,7 @@ const { addUser, queryUserList, deleteUser, modifyUser } =
  * 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.UserInfo) => {
+const handleAdd = async (fields: RequestPayload.UserInfo) => {
   const hide = message.loading('正在添加');
   try {
     await addUser({ ...fields });
@@ -65,7 +66,7 @@ const handleUpdate = async (fields: FormValueType) => {
  *  删除节点
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.UserInfo[]) => {
+const handleRemove = async (selectedRows: RequestPayload.UserInfo[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -88,9 +89,9 @@ const TableList: React.FC<unknown> = () => {
     useState<boolean>(false);
   const [stepFormValues, setStepFormValues] = useState({});
   const actionRef = useRef<ActionType>();
-  const [row, setRow] = useState<API.UserInfo>();
-  const [selectedRowsState, setSelectedRows] = useState<API.UserInfo[]>([]);
-  const columns: ProDescriptionsItemProps<API.UserInfo>[] = [
+  const [row, setRow] = useState<RequestPayload.UserInfo>();
+  const [selectedRowsState, setSelectedRows] = useState<RequestPayload.UserInfo[]>([]);
+  const columns: ProDescriptionsItemProps<RequestPayload.UserInfo>[] = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -145,7 +146,7 @@ const TableList: React.FC<unknown> = () => {
         title: 'CRUD 示例',
       }}
     >
-      <ProTable<API.UserInfo>
+      <ProTable<RequestPayload.UserInfo>
         headerTitle="查询表格"
         actionRef={actionRef}
         rowKey="id"
@@ -158,7 +159,7 @@ const TableList: React.FC<unknown> = () => {
             type="primary"
             onClick={() => handleModalVisible(true)}
           >
-            新建
+            {<FormattedMessage id='button.create'/>}
           </Button>,
         ]}
         request={async (params, sorter, filter) => {
@@ -205,7 +206,7 @@ const TableList: React.FC<unknown> = () => {
         onCancel={() => handleModalVisible(false)}
         modalVisible={createModalVisible}
       >
-        <ProTable<API.UserInfo, API.UserInfo>
+        <ProTable<RequestPayload.UserInfo, RequestPayload.UserInfo>
           onSubmit={async (value) => {
             const success = await handleAdd(value);
             if (success) {
@@ -250,7 +251,7 @@ const TableList: React.FC<unknown> = () => {
         closable={false}
       >
         {row?.name && (
-          <ProDescriptions<API.UserInfo>
+          <ProDescriptions<RequestPayload.UserInfo>
             column={2}
             title={row?.name}
             request={async () => ({
