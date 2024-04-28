@@ -29,7 +29,7 @@ export default () => {
     const {refresh_token, access_token} = await signIn(params);
     localStorage.setItem(TOKEN.ACCESS_TOKEN, access_token);
     localStorage.setItem(TOKEN.REFRESH_TOKEN, refresh_token);
-    history.push('/'); 
+    history.push('/');
   }
 
   return (

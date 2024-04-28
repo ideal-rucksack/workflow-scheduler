@@ -14,7 +14,8 @@ const Guide: React.FC<Props> = (props) => {
     <Layout>
       <Row>
         <Typography.Title level={3} className={styles.title}>
-          欢迎使用 <strong>{name}</strong> ！
+          您好 {name}! <br />
+          感谢您使用 Workflow Scheduler
           <div>
             <FormattedMessage id='welcome' />
           </div>

@@ -34,6 +34,11 @@ export default {
       toSignupText: 'Dont have and account?',
       toSignupLink: 'Signup',
     },
+    404: {
+      title: '404',
+      content: 'Sorry, the page you visited does not exist.',
+      back: 'Back to home',
+    },
   },
   button: {
     signIn: 'Sign in',

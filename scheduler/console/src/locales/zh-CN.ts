@@ -33,6 +33,11 @@ export default {
       title: '欢迎回来',
       toSignupText: '没有账号？点击这里',
       toSignupLink: '注册',
+    },
+    404: {
+      title: '404',
+      content: '抱歉，您访问的页面不存在。',
+      back: '返回首页',
     }
   },
   button: {
