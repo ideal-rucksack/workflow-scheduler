@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from "styled-components";
 import {FormattedMessage} from "@@/plugin-locale";
+import {Navbar} from "@/components/layout";
 
 const float = keyframes`
   0% {
@@ -18,7 +19,8 @@ const float = keyframes`
 const NotFoundPage = () => {
   return (
     <Styles>
-      <div className="not-found-page">
+      <Navbar />
+      <div className="not-found-page" style={{height: '10000px'}}>
         <h1 className="float">404</h1>
         <p><FormattedMessage id='page.404.content'/></p>
         <Link to="/"><FormattedMessage id='page.404.back'/></Link>
@@ -36,6 +38,7 @@ const Styles = styled.div`
   height: 100vh;
   text-align: center;
   background-color: #282c34; // 修改背景颜色为深色
+  //background-color: #fff; // 修改背景颜色为深色
   color: #fff; // 修改文字颜色为白色
 }
 

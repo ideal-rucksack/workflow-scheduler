@@ -15,7 +15,7 @@ export const Styles = styled.div`
         height: 60vh;
         width: 80vw;
         .signin-wrapper {
-            width: 40%;
+            width: 50%;
             display: flex;
             justify-content: space-between;
             flex-direction: column;
@@ -48,8 +48,23 @@ export const Styles = styled.div`
             }
         }
         .right-wrapper {
-            width: 60%;
+            width: 50%;
         }
     }
-    
+    @media (max-width: 600px) {
+        .content-container {
+            padding: 0;
+            .signin-wrapper {
+                width: 100%;
+            }
+            .signin-container {
+                .signin-right {
+                    display: none;
+                }
+            }
+            .right-wrapper {
+                display: none;
+            }
+        }
+    }
 `;

@@ -10,6 +10,7 @@ import {notification} from "antd";
 import {current, refreshTokens} from "@/services/account";
 import {TOKEN} from "@/constants";
 import {history} from "@umijs/max";
+import {createGlobalStyle} from "@@/exports";
 
 const signinPath = '/signin';
 
@@ -22,8 +23,8 @@ export async function getInitialState(): Promise<{
     return await current();
   }
 
+  const currentAccount = await getCurrent();
   if (history.location.pathname !== signinPath) {
-    const currentAccount = await getCurrent();
     return {
       fetchCurrent: getCurrent,
       current: currentAccount,
@@ -34,6 +35,7 @@ export async function getInitialState(): Promise<{
   }
   return {
     fetchCurrent: current,
+    current: currentAccount,
     loading: false,
   };
 }
@@ -155,3 +157,11 @@ export const request: RequestConfig = {
     }
   ],
 };
+
+export const styledComponents = {
+  GlobalStyle: createGlobalStyle`
+    * {
+      //min-width: 300px;
+    }
+  `
+}

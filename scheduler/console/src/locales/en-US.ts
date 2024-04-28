@@ -47,7 +47,7 @@ export default {
     save: 'Save',
     edit: 'Edit',
     delete: 'Delete',
-    submit: 'Submity',
+    submit: 'Submit',
   },
   request: {
     400: 'Bad Request',

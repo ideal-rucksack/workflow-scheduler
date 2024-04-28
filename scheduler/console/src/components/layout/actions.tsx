@@ -5,6 +5,8 @@ import styled from "styled-components";
 import {FormattedMessage, getAllLocales, getLocale, SelectLang, setLocale} from "@@/plugin-locale";
 import {HiLogout, HiTranslate} from "react-icons/hi";
 import {useModel} from "@umijs/max";
+import {signout} from "@/services/account";
+import {TOKEN} from "@/constants";
 
 const defaultLangUConfigMap: Map<string, any> = new Map<string, any>([
   ['en-US', {
@@ -29,7 +31,15 @@ export default () => {
       key: 'sign_out',
       label: (
         <Styles>
-          <span className='dropdown-item'>
+          <span
+            className='dropdown-item'
+            onClick={async () => {
+              await signout();
+              localStorage.removeItem(TOKEN.ACCESS_TOKEN);
+              localStorage.removeItem(TOKEN.REFRESH_TOKEN);
+              window.location.reload();
+            }}
+          >
             <HiLogout/>&nbsp;
             <FormattedMessage id='signOut'/>
           </span>
@@ -67,14 +77,18 @@ export default () => {
               </Dropdown>
             </div>
             <div className='active-item profile'>
-              <Dropdown menu={{items: profileItems}}>
-                <div>
-                  <Badge dot>
-                    <Avatar shape="square" src={'https://avatars.githubusercontent.com/u/75556346?v=4'}/>
-                  </Badge>
-                  <div>{initialState?.current?.nickname}</div>
-                </div>
-              </Dropdown>
+              {
+                initialState?.current ?
+                  <Dropdown menu={{items: profileItems}}>
+                    <div>
+                      <Badge dot>
+                        <Avatar shape="square" src={'https://avatars.githubusercontent.com/u/75556346?v=4'}/>
+                      </Badge>
+                      <div>{initialState?.current?.nickname}</div>
+                    </div>
+                  </Dropdown> :
+                  <></>
+              }
             </div>
           </Space>
         </div>

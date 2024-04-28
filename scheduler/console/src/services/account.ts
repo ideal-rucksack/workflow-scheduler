@@ -28,3 +28,12 @@ export const refreshTokens = async (params: RequestPayload.RefreshToken, options
     ...(options || {}),
   });
 }
+
+export const signout = async (options?: {
+  [key: string]: any
+}): Promise<ResponsePayload.RefreshToken> => {
+  return await request<ResponsePayload.RefreshToken>('/account/signout', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

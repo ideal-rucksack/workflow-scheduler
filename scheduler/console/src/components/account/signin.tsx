@@ -1,16 +1,14 @@
 import {Button, Flex, Space} from "antd";
 import {ProForm} from "@ant-design/pro-form";
 import {ProFormText} from "@ant-design/pro-components";
-import {FormattedMessage, getLocale, setLocale, useIntl} from "@@/plugin-locale";
+import {FormattedMessage, useIntl} from "@@/plugin-locale";
 import {Styles} from "@/components/account/styles";
 import {signIn} from "@/services/account";
 import CryptoJS from 'crypto-js';
 import {TOKEN} from "@/constants";
-import {history} from "@umijs/max";
 
 export default () => {
 
-  const locale = getLocale();
   const intl = useIntl();
   const usernamePlaceholder = intl.formatMessage(
     {
@@ -26,10 +24,10 @@ export default () => {
 
   const handleSignin = async (params: RequestPayload.SignIn) => {
     params.password = CryptoJS.MD5(params.password).toString();
-    const {refresh_token, access_token} = await signIn(params);
+    const { refresh_token, access_token} = await signIn(params);
     localStorage.setItem(TOKEN.ACCESS_TOKEN, access_token);
     localStorage.setItem(TOKEN.REFRESH_TOKEN, refresh_token);
-    history.push('/');
+    window.location.reload();
   }
 
   return (
@@ -98,14 +96,7 @@ export default () => {
         </div>
       </div>
       <div className="footer-container">
-          <Button type='primary' onClick={() => {
-            if (locale === 'zh-CN') {
-              setLocale('en-US');
-            } else {
-              setLocale('zh-CN');
-            }
-          }}>切换语言</Button>
-        </div>
+      </div>
     </Styles>
   )
 }
