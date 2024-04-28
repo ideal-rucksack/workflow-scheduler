@@ -15,9 +15,11 @@
     "@ant-design/pro-components": "^2.4.4",
     "@umijs/max": "^4.1.10",
     "antd": "^5.4.0",
+    "crypto-js": "^4.2.0",
     "react-icons": "^5.1.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
     "husky": "^9",

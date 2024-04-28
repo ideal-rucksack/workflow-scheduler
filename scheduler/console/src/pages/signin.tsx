@@ -1,9 +1,9 @@
-import {Login} from "@/components/account";
+import {SignIn} from "@/components/account";
 
 export default () => {
   return (
     <div>
-      <Login />
+      <SignIn />
     </div>
   )
 }

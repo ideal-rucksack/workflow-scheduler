@@ -20,10 +20,12 @@ func (a AccountAPI) Register(engine *gin.Engine, middlewares ...gin.HandlerFunc)
 	whitelist.POST("/signin", a.signIn)
 	whitelist.POST("/signup", a.signup)
 	whitelist.POST("/verify", a.verify)
+	whitelist.POST("/refresh_token", a.refreshToken)
 
 	funks := append(middlewares, middleware.BearerAuthorizationMiddleware())
 	auth := engine.Group("/account", funks...)
 	auth.GET("/signout", a.signOut)
+	auth.GET("/current", a.current)
 }
 
 func NewAccountAPI(service *service.AccountService) *AccountAPI {
@@ -129,6 +131,50 @@ func (a AccountAPI) verify(context *gin.Context) {
 	}
 
 	result, err = accountService.Verify(payload)
+
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(http.StatusOK, result)
+
+}
+
+func (a AccountAPI) current(context *gin.Context) {
+	var (
+		err            error
+		accountService = a.service
+	)
+
+	accountId, exists := context.Get("account_id")
+	if !exists {
+		panic(errors.NewUnauthorizedError("Unauthorized"))
+	}
+
+	account, err := accountService.Current(accountId.(int64))
+
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(http.StatusOK, account)
+
+}
+
+func (a AccountAPI) refreshToken(context *gin.Context) {
+	var (
+		err            error
+		accountService = a.service
+		payload        requests.RefreshToken
+		result         *response.RefreshToken
+	)
+
+	err = context.ShouldBindJSON(&payload)
+	if err != nil {
+		panic(errors.NewUnauthorizedError("Unauthorized"))
+	}
+
+	result, err = accountService.RefreshToken(payload)
 
 	if err != nil {
 		panic(err)

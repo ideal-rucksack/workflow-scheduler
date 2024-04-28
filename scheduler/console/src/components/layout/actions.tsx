@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import {FormattedMessage, getAllLocales, getLocale, SelectLang, setLocale} from "@@/plugin-locale";
 import {HiLogout, HiTranslate} from "react-icons/hi";
+import {useModel} from "@umijs/max";
 
 const defaultLangUConfigMap: Map<string, any> = new Map<string, any>([
   ['en-US', {
@@ -21,6 +22,7 @@ export default () => {
 
   const allLocales = getAllLocales();
   const currentLocal = getLocale();
+  const {initialState} = useModel('@@initialState');
 
   const profileItems: MenuProps['items'] = [
     {
@@ -66,9 +68,12 @@ export default () => {
             </div>
             <div className='active-item profile'>
               <Dropdown menu={{items: profileItems}}>
-                <Badge dot>
-                  <Avatar shape="square" src={'https://avatars.githubusercontent.com/u/75556346?v=4'}/>
-                </Badge>
+                <div>
+                  <Badge dot>
+                    <Avatar shape="square" src={'https://avatars.githubusercontent.com/u/75556346?v=4'}/>
+                  </Badge>
+                  <div>{initialState?.current?.nickname}</div>
+                </div>
               </Dropdown>
             </div>
           </Space>

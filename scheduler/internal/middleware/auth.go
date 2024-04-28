@@ -28,6 +28,20 @@ func (store *TokenStore) RemoveToken(token string) {
 	store.tokens.Delete(token)
 }
 
+// RemoveUsedToken 用于删除Token
+func (store *TokenStore) RemoveUsedToken(accountId int64) {
+	store.tokens.Range(func(key, value interface{}) bool {
+		claims, err := util.ValidateToken(key.(string), value.(string))
+		if err != nil {
+			store.tokens.Delete(key)
+		}
+		if claims.AccountId == accountId {
+			store.tokens.Delete(key)
+		}
+		return true
+	})
+}
+
 // IsValidToken 用于验证Token是否有效
 func (store *TokenStore) IsValidToken(token string) (*util.Claims, bool) {
 	secret, ok := store.tokens.Load(token)

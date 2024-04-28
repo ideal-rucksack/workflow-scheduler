@@ -13,20 +13,26 @@ export default {
   },
   nav: {
     left: {
-      login: '登录',
+      signin: '登录',
     }
   },
   page: {
-    login: {
-      username: {
-        label: '用户名',
-        placeholder: '请输入用户名',
-      },
-      password: {
-        label: '密码',
-        placeholder: '请输入密码',
+    signin: {
+      input: {
+        username: {
+          label: '用户名',
+          placeholder: '请输入用户名',
+          required: '用户名不能为空',
+        },
+        password: {
+          label: '密码',
+          placeholder: '请输入密码',
+          required: '密码不能为空',
+        },
       },
       title: '欢迎回来',
+      toSignupText: '没有账号？点击这里',
+      toSignupLink: '注册',
     }
   },
   button: {
@@ -40,6 +46,7 @@ export default {
   },
   request: {
     400: '错误的请求',
+    401: '未经授权',
     500: '内部服务器错误',
   },
 };

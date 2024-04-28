@@ -13,24 +13,30 @@ export default {
   },
   nav: {
     left: {
-      login: '登录',
+      signin: 'Sign in',
     }
   },
   page: {
-    login: {
-      username: {
-        label: 'Username',
-        placeholder: 'Please enter username',
-      },
-      password: {
-        label: 'Password',
-        placeholder: 'Please enter password',
+    signin: {
+      input: {
+        username: {
+          label: 'Username',
+          placeholder: 'Please enter username',
+          required: 'Username can not be empty',
+        },
+        password: {
+          label: 'Password',
+          placeholder: 'Please enter password',
+          required: 'Password can not be empty',
+        },
       },
       title: 'Welcome Back',
-    }
+      toSignupText: 'Dont have and account?',
+      toSignupLink: 'Signup',
+    },
   },
   button: {
-    signIn: 'Sign In',
+    signIn: 'Sign in',
     create: 'Create',
     cancel: 'Cancel',
     save: 'Save',
@@ -40,6 +46,7 @@ export default {
   },
   request: {
     400: 'Bad Request',
+    401: 'Unauthorized',
     500: 'Internal Server Error',
   },
 };

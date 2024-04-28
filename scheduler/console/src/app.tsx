@@ -1,7 +1,3 @@
-// 运行时配置
-
-// 全局初始化数据配置，用于 Layout 用户信息和权限初始化
-// 更多信息见文档：https://umijs.org/docs/api/runtime-config#getinitialstate
 import {Footer} from "@/components/footer";
 import {RunTimeLayoutConfig} from "@@/plugin-layout/types";
 import {AntdConfig, RuntimeAntdConfig} from "@@/plugin-antd/types";
@@ -9,11 +5,37 @@ import {Actions} from "@/components/layout";
 import React from "react";
 import Root from "@/root";
 import {RequestConfig} from "@@/plugin-request/request";
+import {getIntl} from "@@/plugin-locale";
 import {notification} from "antd";
-import {FormattedMessage} from "@@/plugin-locale";
+import {current, refreshTokens} from "@/services/account";
+import {TOKEN} from "@/constants";
+import {history} from "@umijs/max";
 
-export async function getInitialState(): Promise<{ name: string }> {
-  return { name: 'Hello World' };
+const signinPath = '/signin';
+
+export async function getInitialState(): Promise<{
+  fetchCurrent: () => Promise<ResponsePayload.Current>,
+  current?: ResponsePayload.Current,
+  loading: boolean,
+}> {
+  const getCurrent = async (): Promise<ResponsePayload.Current> => {
+    return await current();
+  }
+
+  if (history.location.pathname !== signinPath) {
+    const currentAccount = await getCurrent();
+    return {
+      fetchCurrent: getCurrent,
+      current: currentAccount,
+      loading: false,
+    }
+  } else {
+    history.push('/');
+  }
+  return {
+    fetchCurrent: current,
+    loading: false,
+  };
 }
 
 export const layout: RunTimeLayoutConfig = () => {
@@ -66,25 +88,50 @@ export const request: RequestConfig = {
   errorConfig: {
     errorHandler(err: any) {
       if (err?.request) {
+        const intl = getIntl()
+        const message400 = intl.formatMessage({ id: 'request.400' })
+        const message401 = intl.formatMessage({ id: 'request.401' })
+        const message500 = intl.formatMessage({ id: 'request.500' })
         const { status, response } = err?.request;
         const responseBody: ErrorResponse = JSON.parse(response);
         switch (status) {
           // 鉴权失败
           case 401:
+            localStorage.removeItem(TOKEN.ACCESS_TOKEN);
+            // 判断有没有refresh token 如果有去通过refresh token重新获取access token
+            const refreshToken = localStorage.getItem(TOKEN.REFRESH_TOKEN);
+            if (refreshToken) {
+              refreshTokens({refresh_token: refreshToken})
+                .then((res) => {
+                  localStorage.setItem(TOKEN.ACCESS_TOKEN, res.access_token);
+                  window.location.reload();
+                }).catch((reason) => {
+                  // reason.response.data.error
+                  localStorage.removeItem(TOKEN.REFRESH_TOKEN);
+                  notification.error({
+                    description: reason.response.data.error,
+                    message: message401,
+                  });
+                  history.push('/signin');
+                });
+            } else {
+              notification.error({
+                description: responseBody.error,
+                message: message401,
+              });
+              history.push('/signin');
+            }
             break;
           case 400:
-            // success(responseBody.error)
             notification.error({
               description: responseBody.error,
-              // message: <FormattedMessage id='request.400'/>,
-              message: 'Bad Request',
+              message: message400,
             });
             break;
           case 500:
             notification.error({
               description: responseBody.error,
-              // message: <FormattedMessage id='request.500'/>,
-              message: '服务器内部错误',
+              message: message500,
             });
             break;
         }
@@ -101,7 +148,7 @@ export const request: RequestConfig = {
           ...options,
           timeout: 10000,
           headers: {
-            // "x-admin-token": localStorage.getItem(TOKEN_HEADER)
+            'Authorization': 'Bearer ' + localStorage.getItem(TOKEN.ACCESS_TOKEN),
           }
         }
       };

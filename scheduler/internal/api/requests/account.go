@@ -23,6 +23,10 @@ type SignIn struct {
 	Password string `json:"password" validate:"required" message:"Password is illegal"`
 }
 
+type RefreshToken struct {
+	RefreshToken string `json:"refresh_token" validate:"required" message:"Refresh token is illegal"`
+}
+
 func (s Signup) Validate() error {
 	return Validate(s)
 }

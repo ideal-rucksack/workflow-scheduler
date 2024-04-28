@@ -5,6 +5,7 @@ import (
 	"github.com/ideal-rucksack/workflow-scheduler/pkg/util"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/api/requests"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/api/response"
+	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/constants"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/middleware"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/repo"
 	"github.com/ideal-rucksack/workflow-scheduler/scheduler/internal/repo/entities"
@@ -116,7 +117,7 @@ func (s AccountService) Verify(payload requests.Verify) (*response.Verify, error
 		return nil, err
 	}
 
-	var expiresAt = time.Minute
+	var expiresAt = time.Minute * constants.TOKEN_VALIDITY_PERIOD
 	accessToken, err := util.GenerateToken(*account.Id, *account.Secret, &expiresAt)
 	if err != nil {
 		return nil, err
@@ -161,7 +162,7 @@ func (s AccountService) SignIn(payload requests.SignIn) (*response.SignIn, error
 		return nil, errors.NewIllegalArgumentError("password error")
 	}
 
-	var expiresAt = time.Minute
+	var expiresAt = time.Minute * constants.TOKEN_VALIDITY_PERIOD
 	accessToken, err := util.GenerateToken(*account.Id, *account.Secret, &expiresAt)
 	if err != nil {
 		return nil, err
@@ -203,6 +204,54 @@ func (s AccountService) SignOut(id int64) error {
 
 	account.RefreshToken = nil
 	return accountRepository.Update(*account)
+}
+
+func (s AccountService) Current(id int64) (*response.Current, error) {
+	var (
+		err               error
+		accountRepository = s.repo
+	)
+
+	account, err := accountRepository.QueryById(id, false)
+	if err != nil {
+		return nil, err
+	}
+
+	return &response.Current{
+		Username: *account.Username,
+		Nickname: *account.Nickname,
+		Email:    *account.Email,
+		Code:     account.Code,
+		Status:   *account.Status,
+	}, nil
+}
+
+func (s AccountService) RefreshToken(payload requests.RefreshToken) (*response.RefreshToken, error) {
+	var (
+		err               error
+		accountRepository = s.repo
+	)
+
+	account, err := accountRepository.QueryByRefreshToken(payload.RefreshToken, false)
+	if err != nil {
+		return nil, err
+	}
+
+	if account == nil {
+		return nil, errors.NewUnauthorizedError("Unauthorized")
+	}
+
+	var expiresAt = time.Minute * constants.TOKEN_VALIDITY_PERIOD
+	accessToken, err := util.GenerateToken(*account.Id, *account.Secret, &expiresAt)
+	if err != nil {
+		return nil, err
+	}
+
+	middleware.TokenStoreCache.RemoveUsedToken(*account.Id)
+	middleware.TokenStoreCache.SetToken(accessToken, *account.Secret)
+	return &response.RefreshToken{
+		AccessToken: accessToken,
+	}, nil
 }
 
 func NewAccountService(repo *repo.AccountRepo) *AccountService {

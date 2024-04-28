@@ -4,7 +4,7 @@ import styles from './guide.less';
 import {FormattedMessage} from "@@/plugin-locale";
 
 interface Props {
-  name: string;
+  name?: string;
 }
 
 // 脚手架示例组件

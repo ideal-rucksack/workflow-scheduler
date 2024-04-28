@@ -9,7 +9,7 @@ import {
 import { Modal } from 'antd';
 import React from 'react';
 
-export interface FormValueType extends Partial<RequestPayload.UserInfo> {
+export interface FormValueType extends Partial<ResponsePayload.Account> {
   target?: string;
   template?: string;
   type?: string;
@@ -21,7 +21,7 @@ export interface UpdateFormProps {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;
   onSubmit: (values: FormValueType) => Promise<void>;
   updateModalVisible: boolean;
-  values: Partial<RequestPayload.UserInfo>;
+  values: Partial<ResponsePayload.Account>;
 }
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => (
@@ -48,8 +48,8 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => (
   >
     <StepsForm.StepForm
       initialValues={{
-        name: props.values.name,
-        nickName: props.values.nickName,
+        name: props.values.username,
+        nickName: props.values.nickname,
       }}
       title="基本信息"
     >

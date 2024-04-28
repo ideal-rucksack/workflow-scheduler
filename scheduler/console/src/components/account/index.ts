@@ -1,5 +1,5 @@
-import Login from "@/components/account/login";
+import SignIn from "@/components/account/signin";
 
 export {
-  Login
+  SignIn
 }

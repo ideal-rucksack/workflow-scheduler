@@ -110,6 +110,19 @@ func (a AccountRepo) QueryById(id int64, deleted bool) (*entities.Account, error
 	return &account, nil
 }
 
+func (a AccountRepo) QueryByRefreshToken(refreshToken string, deleted bool) (*entities.Account, error) {
+	var account entities.Account
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE refresh_token = ? and deleted = ?", a.Columns2Query(), a.TableName())
+	err := a.db.Get(&account, query, refreshToken, deleted)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &account, nil
+}
+
 func NewAccountRepo(db *sqlx.DB) *AccountRepo {
 	return &AccountRepo{db: db}
 }
